@@ -86,8 +86,6 @@ def train(base_channels=16,
                              loss_list=loss_list)
             torch.save(save_dict, f'./checkpoints/miniunet_{epoch}.pth')
 
-        print(f'[Epoch {epoch}] loss: {loss.item()}')
-
 
 if __name__ == '__main__':
     train(base_channels=64,

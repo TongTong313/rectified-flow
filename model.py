@@ -243,8 +243,8 @@ class MiniUnet(nn.Module):
         t = t * 1000
 
         freqs = torch.pow(10000, torch.linspace(0, 1, dim // 2)).to(t.device)
-        sin_emb = torch.sin(t[:, None] / freqs[None])
-        cos_emb = torch.cos(t[:, None] / freqs[None])
+        sin_emb = torch.sin(t[:, None] / freqs)
+        cos_emb = torch.cos(t[:, None] / freqs)
 
         return torch.cat([sin_emb, cos_emb], dim=-1)
 

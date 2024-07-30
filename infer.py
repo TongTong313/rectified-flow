@@ -54,7 +54,7 @@ def infer(checkpoint_path,
 
 
 if __name__ == '__main__':
-    infer('./checkpoints/miniunet_29.pth',
+    infer('./checkpoints/miniunet_60.pth',
           base_channels=64,
-          step=50,
+          step=10,
           num_imgs=50)
