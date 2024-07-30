@@ -46,7 +46,8 @@ def infer(checkpoint_path,
         # 先去掉batch维度
         x_t = x_t[0]
         # 归一化到0到1
-        x_t = (x_t / 2 + 0.5).clamp(0, 1)
+        # x_t = (x_t / 2 + 0.5).clamp(0, 1)
+        x_t = x_t.clamp(0, 1)
         img = x_t.detach().cpu().numpy()
         img = img[0] * 255
         img = img.astype('uint8')

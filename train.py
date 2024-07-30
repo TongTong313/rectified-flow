@@ -19,7 +19,7 @@ def train(base_channels=16,
 
     # 数据集加载
     # 把PIL转为tensor
-    transform = Compose([ToTensor(), Normalize([0.5], [0.5])])
+    transform = Compose([ToTensor()])
 
     dataset = MNIST(root='./data',
                     train=True,
