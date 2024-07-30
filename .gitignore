@@ -1,0 +1,8 @@
+.DS_Store
+*.pt
+*.pth
+*.safetensors
+*.bin
+data/
+**/__pycache__/
+results/
