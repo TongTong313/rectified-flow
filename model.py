@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 
-# MiniUnet MNIST 28*28
+# MiniUnet MNIST 28*28 4090 3G左右显存
 class DownLayer(nn.Module):
-    """MiniUnet的下采样层
+    """MiniUnet的下采样层 Resnet
     """
 
     def __init__(self,
