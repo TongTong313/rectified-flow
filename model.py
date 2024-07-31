@@ -233,6 +233,20 @@ class MiniUnet(nn.Module):
     # 对时间进行正弦函数的编码
     def time_emb(self, t, dim):
         """对时间进行正弦函数的编码，单一维度
+        目标：让layer block知道你当前时间t是多少
+        举例：
+            t = 0.1
+            time_emb_learn = nn.Parameter(1000, dim) # 离散
+            # 1.
+            time_emb = time_emb_learn[t, :]
+            # 2. 
+            time_emb = [0.1] * dim.reshape(1, C, 1, 1)
+            # 3.
+            time_emb = sin(0.1 / 10000^k) k \in torch.linspace……
+            x += time_emb
+            t = 0.2
+            time_emb = [0.2] * dim.reshape(1, C, 1, 1)
+            x += time_emb
 
         Args:
             t (float): 时间，维度为[B]
@@ -244,7 +258,7 @@ class MiniUnet(nn.Module):
         # 生成正弦编码
         # 把t映射到[0, 1000]
         t = t * 1000
-
+        # 10000^k k=torch.linspace……
         freqs = torch.pow(10000, torch.linspace(0, 1, dim // 2)).to(t.device)
         sin_emb = torch.sin(t[:, None] / freqs)
         cos_emb = torch.cos(t[:, None] / freqs)
