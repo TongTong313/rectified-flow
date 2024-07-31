@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 
+# MiniUnet MNIST 28*28
 class DownLayer(nn.Module):
     """MiniUnet的下采样层
     """
@@ -26,7 +27,7 @@ class DownLayer(nn.Module):
 
         self.act = nn.ReLU()
 
-        # 线性层，用于时间编码换通道
+        # 线性层，用于时间编码换通道 [B, dim] -> [B, in_channels]
         self.fc = nn.Linear(time_emb_dim, in_channels)
 
         if in_channels != out_channels:
@@ -42,9 +43,10 @@ class DownLayer(nn.Module):
         self.in_channels = in_channels
 
     def forward(self, x, temb):
+        # x: [B, C, H, W]
         res = x
 
-        x += self.fc(temb)[:, :, None, None]
+        x += self.fc(temb)[:, :, None, None]  # [B, in_channels, 1, 1]
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.act(x)
@@ -168,7 +170,7 @@ class MiddleLayer(nn.Module):
 
 class MiniUnet(nn.Module):
     """采用MiniUnet，对MNIST数据做生成
-        两个下采样层 一个中间层 两个上采样层
+        两个下采样block 一个中间block 两个上采样block
     """
 
     def __init__(self, base_channels=16, time_emb_dim=None):
@@ -207,10 +209,11 @@ class MiniUnet(nn.Module):
                                   time_emb_dim=self.time_emb_dim)
 
         self.up1 = nn.ModuleList([
-            UpLayer(base_channels * 8,
-                    base_channels * 2,
-                    time_emb_dim=self.time_emb_dim,
-                    upsample=True),
+            UpLayer(
+                base_channels * 8,  # concat
+                base_channels * 2,
+                time_emb_dim=self.time_emb_dim,
+                upsample=True),
             UpLayer(base_channels * 2,
                     base_channels * 2,
                     time_emb_dim=self.time_emb_dim)
@@ -236,7 +239,7 @@ class MiniUnet(nn.Module):
             dim (int): 编码的维度
 
         Returns:
-            torch.Tensor: 编码后的时间，维度为[B, dim]
+            torch.Tensor: 编码后的时间，维度为[B, dim]  输入是[B, C, H, W]
         """
         # 生成正弦编码
         # 把t映射到[0, 1000]
@@ -249,6 +252,7 @@ class MiniUnet(nn.Module):
         return torch.cat([sin_emb, cos_emb], dim=-1)
 
     def forward(self, x, t):
+        # x:(B, C, H, W)
         # 时间编码加上
         x = self.conv_in(x)
         temb = self.time_emb(t, self.base_channels)

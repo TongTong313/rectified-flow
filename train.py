@@ -19,19 +19,20 @@ def train(base_channels=16,
 
     # 数据集加载
     # 把PIL转为tensor
-    transform = Compose([ToTensor()])
+    transform = Compose([ToTensor()])  # 变换成tensor + 变为[0, 1]
 
-    dataset = MNIST(root='./data',
-                    train=True,
-                    download=True,
-                    transform=transform)
+    dataset = MNIST(
+        root='./data',
+        train=True,  # 6w
+        download=True,
+        transform=transform)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     # 模型加载
     model = MiniUnet(base_channels)
     model.to('cuda')
 
-    # 优化器加载
+    # 优化器加载 Rectified Flow的论文里面有的用的就是AdamW
     optimizer = AdamW(model.parameters(), lr=1e-4, weight_decay=0.1)
 
     # 学习率调整
@@ -49,14 +50,15 @@ def train(base_channels=16,
     # 训练循环
     for epoch in range(epochs):
         for batch, data in enumerate(dataloader):
-            x_1, _ = data
+            x_1, _ = data  # x_1原始图像
 
-            # 均匀采样[0, 1]的时间t
+            # 均匀采样[0, 1]的时间t randn 标准正态分布
             t = torch.rand(x_1.size(0))
 
             # 生成flow（实际上是一个点）
             x_t, x_0 = rf.create_flow(x_1, t)
 
+            # 4090 大概占用显存3G
             x_t = x_t.to('cuda')
             x_0 = x_0.to('cuda')
             x_1 = x_1.to('cuda')
@@ -88,8 +90,9 @@ def train(base_channels=16,
 
 
 if __name__ == '__main__':
-    train(base_channels=64,
-          epochs=100,
-          batch_size=16,
-          lr_adjust_epoch=50,
-          checkpoint_save_interval=10)
+    train(
+        base_channels=64,  # base_channels大一些有好处
+        epochs=100,
+        batch_size=16,  # batch_size小一些
+        lr_adjust_epoch=50,
+        checkpoint_save_interval=10)

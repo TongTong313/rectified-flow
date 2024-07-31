@@ -1,9 +1,11 @@
 import torch
 import torch.nn.functional as F
 
+# 老司机开车理论->三要素：路线、车、司机
+
 
 class RectifiedFlow:
-
+    # 车：图像生成一个迭代公式 ODE f(t+dt) = f(t) + dt*f'(t)
     def euler(self, x_t, v, dt):
         """ 使用欧拉方法计算下一个时间步长的值
             
@@ -16,10 +18,11 @@ class RectifiedFlow:
 
         return x_t
 
+    # 路线
     def create_flow(self, x_1, t):
         """ 使用x_t = t * x_1 + (1 - t) * x_0公式构建x_0到x_1的流
 
-            X_1是原始图像 X_0是噪声图像（服从高斯分布）
+            X_1是原始图像 X_0是噪声图像（服从标准高斯分布）
             
         Args:
             x_1: 原始图像，维度为 [B, C, H, W]
@@ -34,16 +37,17 @@ class RectifiedFlow:
         # 需要一个x0，x0服从高斯噪声
         x_0 = torch.randn_like(x_1)
 
-        t = t[:, None, None, None]
+        t = t[:, None, None, None]  # [B, 1, 1, 1]
 
         # 获得xt的值
         x_t = t * x_1 + (1 - t) * x_0
 
         return x_t, x_0
 
+    # 司机
     def mse_loss(self, v, x_1, x_0):
         """ 计算RectifiedFlow的损失函数
-        L = MSE(x_1 - x_0 - v(t))
+        L = MSE(x_1 - x_0 - v(t))  匀速直线运动
 
         Args:
             v: 速度，维度为 [B, C, H, W]

@@ -5,11 +5,12 @@ import cv2
 import os
 
 
-def infer(checkpoint_path,
-          base_channels=16,
-          step=50,
-          num_imgs=5,
-          save_path='./results'):
+def infer(
+        checkpoint_path,
+        base_channels=16,
+        step=50,  # 采样步数（Euler方法的迭代次数） 10步效果就很好 1步效果不好
+        num_imgs=5,
+        save_path='./results'):
     # 生成一些图片
     # 加载模型
     model = MiniUnet(base_channels=base_channels)
@@ -22,7 +23,7 @@ def infer(checkpoint_path,
     checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint['model'])
 
-    # 生成图片
+    # 无条件生成图片
     for i in range(num_imgs):
         print(f'Generating {i}th image...')
         # Euler法间隔
@@ -57,5 +58,5 @@ def infer(checkpoint_path,
 if __name__ == '__main__':
     infer('./checkpoints/miniunet_80.pth',
           base_channels=64,
-          step=10,
+          step=50,
           num_imgs=50)
