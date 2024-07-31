@@ -1,6 +1,6 @@
 # 从零手搓Flow Matching（Rectified Flow）代码
 作者：Tong Tong
-B站主页：[Tong Tong](https://space.bilibili.com/100689001)
+B站主页：[Tong发发](https://space.bilibili.com/100689001)
 
 ## 说明
 
