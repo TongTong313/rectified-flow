@@ -233,21 +233,20 @@ class MiniUnet(nn.Module):
     # 对时间进行正弦函数的编码
     def time_emb(self, t, dim):
         """对时间进行正弦函数的编码，单一维度
-        目标：让layer block知道你当前时间t是多少
-        举例：
-            t = 0.1
-            time_emb_learn = nn.Parameter(1000, dim) # 离散
-            # 1.
-            time_emb = time_emb_learn[t, :]
-            # 2. 
-            time_emb = [0.1] * dim.reshape(1, C, 1, 1)
-            # 3.
-            time_emb = sin(0.1 / 10000^k) k \in torch.linspace……
-            x += time_emb
-            t = 0.2
-            time_emb = [0.2] * dim.reshape(1, C, 1, 1)
-            x += time_emb
-
+       目标：让模型感知到输入x_t的时刻t
+       实现方式：多种多样
+       输入x：[B, C, H, W] x += temb 与空间无关的，也即每个空间位置（H, W）,都需要加上一个相同的时间编码向量[B, C]
+       假设B=1 t=0.1
+       1. 简单粗暴法
+       temb = [0.1] * C -> [0.1, 0.1, 0.1, ……]
+       x += temb.reshape(1, C, 1, 1)
+       2. 类似绝对位置编码方式
+       本代码实现方式
+       3. 通过学习的方式（保证T是离散的0， 1， 2， 3，……，T）
+       temb_learn = nn.Parameter(T+1, dim)
+       x += temb_learn[t, :].reshape(1, C, 1, 1)
+       
+       
         Args:
             t (float): 时间，维度为[B]
             dim (int): 编码的维度
