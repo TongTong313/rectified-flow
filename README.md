@@ -13,7 +13,7 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * 为了让大家都能上手，本代码只基于深度学习框架Pytorch和一些其他必要的库。数据集选择MNIST作为案例，该数据集Pytorch本身自带，数据集规模较小，也方便展示效果，最重要的是**即使是使用CPU都能训练**！！！
 * 模型结构自己手搓了一个MiniUnet，大家可以根据自己的需求修改，也可以使用其他更复杂的模型，比如Unet、DiT等。
 * 代码中有很多注释，希望能帮助大家理解代码，如果有问题欢迎留言交流。
-* V1.0版本相关模型权重文件和MNIST训练集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
+* V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
     * 链接：https://pan.baidu.com/s/1qngZgLqdOwOmSXOmRqe9EQ?pwd=svhd 
     * 提取码：svhd  
 
