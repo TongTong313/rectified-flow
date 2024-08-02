@@ -16,6 +16,19 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
     * 链接：https://pan.baidu.com/s/1qngZgLqdOwOmSXOmRqe9EQ?pwd=svhd 
     * 提取码：svhd  
+* 代码环境要求很低，甚至不需要GPU都可以
+    * Python 3.8+
+    * Pytorch 2.0+ 
+    * Numpy
+    * Matplotlib
+    * 其他的就缺啥装啥
+* 代码运行方式：
+    * 训练：`python train.py`
+    * 推理：`python infer.py`
+    * 画loss曲线：`python plot_loss_curve.py`
+
+
+### **特别推荐看一下本人的[扩散模型之老司机开车理论视频](https://www.bilibili.com/video/BV1qW42197dv/)，对你理解扩散模型有很大帮助~**
 
 ### TODO
 - [x] 即将开放模型预训练权重（百度网盘形式），大家下载后可以直接运行推理代码，方便大家进行测试
