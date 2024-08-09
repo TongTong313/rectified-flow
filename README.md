@@ -12,7 +12,7 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 - [ ] v1.1版本计划增加MNIST条件生成 
 
 **一些bug修复说明**:
-- 感谢粉丝大佬提醒，MiniUnet编的草率了，现已更新，现在最高分辨率的特征也有结合啦~
+- 感谢B站粉丝大佬@EchozL提醒，MiniUnet编的草率了，现已更新，最高分辨率的特征也concat啦~
 
 **模型更新了一个版本，2024年8月9日前下载的模型权重不能用啦~**
 
@@ -28,7 +28,7 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
     * 链接：https://pan.baidu.com/s/1WMaxvYKjDvad8Cr_vU5Exw?pwd=1nkv  
     * 提取码：1nkv  
-    **注意！模型更新导致权重同步更新！请下载最新模型，更新日期2024年8月10日**
+    **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
 * 代码环境要求很低，甚至不需要GPU都可以
     * Python 3.8+
     * Pytorch 2.0+ 
