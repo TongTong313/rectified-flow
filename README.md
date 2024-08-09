@@ -42,6 +42,9 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
     * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
     * 其他代码不重要，感兴趣也可看一看
 * 模型整体收敛较好
+
 ![loss curve](/fig/loss_curve.png)
+
 * 生成效果展示
+
 ![results](/fig/results_fig.png)
