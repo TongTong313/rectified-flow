@@ -188,41 +188,45 @@ class MiniUnet(nn.Module):
             DownLayer(base_channels,
                       base_channels * 2,
                       time_emb_dim=self.time_emb_dim,
-                      downsample=True),
+                      downsample=False),
             DownLayer(base_channels * 2,
                       base_channels * 2,
                       time_emb_dim=self.time_emb_dim)
         ])
+        self.maxpool1 = nn.MaxPool2d(2)
 
         self.down2 = nn.ModuleList([
             DownLayer(base_channels * 2,
                       base_channels * 4,
                       time_emb_dim=self.time_emb_dim,
-                      downsample=True),
+                      downsample=False),
             DownLayer(base_channels * 4,
                       base_channels * 4,
                       time_emb_dim=self.time_emb_dim)
         ])
+        self.maxpool2 = nn.MaxPool2d(2)
 
         self.middle = MiddleLayer(base_channels * 4,
                                   base_channels * 4,
                                   time_emb_dim=self.time_emb_dim)
 
+        self.upsample1 = nn.Upsample(scale_factor=2)
         self.up1 = nn.ModuleList([
             UpLayer(
                 base_channels * 8,  # concat
                 base_channels * 2,
                 time_emb_dim=self.time_emb_dim,
-                upsample=True),
+                upsample=False),
             UpLayer(base_channels * 2,
                     base_channels * 2,
                     time_emb_dim=self.time_emb_dim)
         ])
+        self.upsample2 = nn.Upsample(scale_factor=2)
         self.up2 = nn.ModuleList([
             UpLayer(base_channels * 4,
                     base_channels,
                     time_emb_dim=self.time_emb_dim,
-                    upsample=True),
+                    upsample=False),
             UpLayer(base_channels,
                     base_channels,
                     time_emb_dim=self.time_emb_dim)
@@ -274,18 +278,20 @@ class MiniUnet(nn.Module):
         for layer in self.down1:
             x = layer(x, temb)
         x1 = x
+        x = self.maxpool1(x)
         for layer in self.down2:
             x = layer(x, temb)
         x2 = x
+        x = self.maxpool2(x)
 
         # 中间层
-        x = self.middle(x2, temb)
+        x = self.middle(x, temb)
 
         # 上采样
-        x = torch.cat([x, x2], dim=1)
+        x = torch.cat([self.upsample1(x), x2], dim=1)
         for layer in self.up1:
             x = layer(x, temb)
-        x = torch.cat([x, x1], dim=1)
+        x = torch.cat([self.upsample2(x), x1], dim=1)
         for layer in self.up2:
             x = layer(x, temb)
 

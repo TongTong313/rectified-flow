@@ -11,6 +11,10 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 - [x] 即将开放模型预训练权重（百度网盘形式），大家下载后可以直接运行推理代码，方便大家进行测试
 - [ ] v1.1版本计划增加MNIST条件生成 
 
+**一些bug修复说明**:
+- 感谢粉丝大佬提醒，MiniUnet编的草率了，现已更新，现在最高分辨率的特征也有结合啦~
+
+**模型更新了一个版本，2024年8月9日前下载的模型权重不能用啦~**
 
 ## V1.0-Flow Matching(Rectified Flow)无条件生成
 
@@ -22,15 +26,22 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * 模型结构自己手搓了一个MiniUnet，大家可以根据自己的需求修改，也可以使用其他更复杂的模型，比如Unet、DiT等。
 * 代码中有很多注释，希望能帮助大家理解代码，如果有问题欢迎留言交流。
 * V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
-    * 链接：https://pan.baidu.com/s/1qngZgLqdOwOmSXOmRqe9EQ?pwd=svhd 
-    * 提取码：svhd  
+    * 链接：https://pan.baidu.com/s/1WMaxvYKjDvad8Cr_vU5Exw?pwd=1nkv  
+    * 提取码：1nkv  
+    **注意！模型更新导致权重同步更新！请下载最新模型，更新日期2024年8月10日**
 * 代码环境要求很低，甚至不需要GPU都可以
     * Python 3.8+
     * Pytorch 2.0+ 
     * Numpy
     * Matplotlib
     * 其他的就缺啥装啥
-* 代码运行方式：
+* 代码运行方式
     * 训练：`python train.py`
     * 推理：`python infer.py`
     * 画loss曲线：`python plot_loss_curve.py`
+    * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
+    * 其他代码不重要，感兴趣也可看一看
+* 模型整体收敛较好
+![loss curve](/fig/loss_curve.png)
+* 生成效果展示
+![results](/fig/results_fig.png)

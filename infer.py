@@ -60,5 +60,5 @@ def infer(
 if __name__ == '__main__':
     infer('./checkpoints/miniunet_80.pth',
           base_channels=64,
-          step=50,
-          num_imgs=50)
+          step=30,
+          num_imgs=100)
