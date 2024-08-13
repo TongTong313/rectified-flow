@@ -40,7 +40,6 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
     * 推理：`python infer.py`
     * 画loss曲线：`python plot_loss_curve.py`
     * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
-    * 其他代码不重要，感兴趣也可看一看
 * 模型整体收敛较好
 
 ![loss curve](/fig/loss_curve.png)
@@ -48,3 +47,7 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * 生成效果展示
 
 ![results](/fig/results_fig.png)
+
+* 代码实现原理参考论文
+    * Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow
+    * Flow Matching for Generative Modeling
