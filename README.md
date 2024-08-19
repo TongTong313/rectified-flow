@@ -17,30 +17,31 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 
 **模型更新了一个版本，2024年8月9日前下载的模型权重不能用啦~**
 
-## V1.0-Flow Matching(Rectified Flow)无条件生成
-
-### 说明
-
+## 代码说明
 * 代码基于MNIST数据集实现算法的训练与推理，可实现无条件生成0~9手写字体
 * 本项目完全**从零手搓**，尽可能不参考其他任何代码，从论文原理出发逐步实现，因此算是**极简实现**的一种，并**不能保证最优性能**，各位大佬可以逐步修改完善，欢迎交流。
 * 为了让大家都能上手，本代码只基于深度学习框架Pytorch和一些其他必要的库。数据集选择MNIST作为案例，该数据集Pytorch本身自带，数据集规模较小，也方便展示效果，最重要的是**即使是使用CPU都能训练**！！！
 * 模型结构自己手搓了一个MiniUnet，大家可以根据自己的需求修改，也可以使用其他更复杂的模型，比如Unet、DiT等。
 * 代码中有很多注释，希望能帮助大家理解代码，如果有问题欢迎留言交流。
+* 代码环境要求很低，甚至不需要GPU都可以
+  * Python 3.8+
+  * Pytorch 2.0+ 
+  * Numpy
+  * Matplotlib
+  * 其他的就缺啥装啥
+* 代码运行方式
+  * 如果需要训练代码请务必先查看config文件夹里的train_config.yaml文件，并根据实际情况修改相关参数，尤其是是否使用classifier-free guidance，是否使用GPU等，设置好了再开始训练
+  * 训练：`python train.py`
+  * 推理：`python infer.py`，注意设置相关参数
+  * 画loss曲线：`python plot_loss_curve.py`
+  * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
+
+### V1.0：Flow Matching(Rectified Flow)无条件生成
+* V1.0版本仅支持无条件生成
 * V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
     * 链接：https://pan.baidu.com/s/1WMaxvYKjDvad8Cr_vU5Exw?pwd=1nkv  
     * 提取码：1nkv  
     **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
-* 代码环境要求很低，甚至不需要GPU都可以
-    * Python 3.8+
-    * Pytorch 2.0+ 
-    * Numpy
-    * Matplotlib
-    * 其他的就缺啥装啥
-* 代码运行方式
-    * 训练：`python train.py`
-    * 推理：`python infer.py`
-    * 画loss曲线：`python plot_loss_curve.py`
-    * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
 * 模型整体收敛较好
 
 ![loss curve](/fig/loss_curve.png)
@@ -49,6 +50,7 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 
 ![results](/fig/results_fig.png)
 
+---
 * 代码实现原理参考论文
     * Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow
     * Flow Matching for Generative Modeling

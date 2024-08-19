@@ -6,7 +6,6 @@ import torch.nn as nn
 class DownLayer(nn.Module):
     """MiniUnet的下采样层 Resnet
     """
-
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -45,7 +44,6 @@ class DownLayer(nn.Module):
     def forward(self, x, temb):
         # x: [B, C, H, W]
         res = x
-
         x += self.fc(temb)[:, :, None, None]  # [B, in_channels, 1, 1]
         x = self.conv1(x)
         x = self.bn1(x)
@@ -68,7 +66,6 @@ class DownLayer(nn.Module):
 class UpLayer(nn.Module):
     """MiniUnet的上采样层
     """
-
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -125,7 +122,6 @@ class UpLayer(nn.Module):
 class MiddleLayer(nn.Module):
     """MiniUnet的中间层
     """
-
     def __init__(self, in_channels, out_channels, time_emb_dim=16):
         super(MiddleLayer, self).__init__()
 
@@ -172,7 +168,6 @@ class MiniUnet(nn.Module):
     """采用MiniUnet，对MNIST数据做生成
         两个下采样block 一个中间block 两个上采样block
     """
-
     def __init__(self, base_channels=16, time_emb_dim=None):
         super(MiniUnet, self).__init__()
 
@@ -234,7 +229,6 @@ class MiniUnet(nn.Module):
 
         self.conv_out = nn.Conv2d(base_channels, 1, kernel_size=1, padding=0)
 
-    # 对时间进行正弦函数的编码
     def time_emb(self, t, dim):
         """对时间进行正弦函数的编码，单一维度
        目标：让模型感知到输入x_t的时刻t
@@ -268,12 +262,49 @@ class MiniUnet(nn.Module):
 
         return torch.cat([sin_emb, cos_emb], dim=-1)
 
-    def forward(self, x, t):
+    def label_emb(self, y, dim):
+        """对类别标签进行编码，同样采用正弦编码
+
+        Args:
+            y (torch.Tensor): 图像标签，维度为[B]
+            dim (int): 编码的维度
+
+        Returns:
+            torch.Tensor: 编码后的标签，维度为[B, dim]
+        """
+        y = y * 1000
+
+        freqs = torch.pow(10000, torch.linspace(0, 1, dim // 2)).to(y.device)
+        sin_emb = torch.sin(y[:, None] / freqs)
+        cos_emb = torch.cos(y[:, None] / freqs)
+
+        return torch.cat([sin_emb, cos_emb], dim=-1)
+
+    def forward(self, x, t, y=None):
+        """前向传播函数
+
+        Args:
+            x (torch.Tensor): 输入数据，维度为[B, C, H, W]
+            t (torch.Tensor): 时间，维度为[B]
+            y (torch.Tensor, optional): 数据标签（每一个标签是一个类别int型）或text文本（下一版本支持）,维度为[B]或[B, L]。 Defaults to None.
+        """
         # x:(B, C, H, W)
         # 时间编码加上
         x = self.conv_in(x)
+        # 时间编码
         temb = self.time_emb(t, self.base_channels)
-
+        # 这里注意，我们把temb和labelemb加起来，作为一个整体的temb输入到MiniUnet中，让模型进行感知！二者编码维度一样，可以直接相加！就把label的条件信息融入进去了！
+        if y is not None:
+            # 判断y是label还是token
+            if len(y.shape) == 1:
+                # label编码，-1表示无条件生成，仅用于训练区分，推理的时候不需要
+                # 把y中等于-1的部分找出来不进行任何编码，其余的进行编码
+                yemb = self.label_emb(y, self.base_channels)
+                # 把y等于-1的index找出来，然后把对应的y_emb设置为0
+                yemb[y == -1] = 0.0
+                temb += yemb
+            else:  # 文字版本
+                pass
         # 下采样
         for layer in self.down1:
             x = layer(x, temb)
@@ -300,11 +331,13 @@ class MiniUnet(nn.Module):
 
 
 if __name__ == '__main__':
+    device = 'mps'
     model = MiniUnet()
-    model = model.to('cuda')
-    x = torch.randn(2, 1, 28, 28).to('cuda')
-    t = torch.randn(2).to('cuda')
+    model = model.to(device)
+    x = torch.randn(2, 1, 28, 28).to(device)
+    t = torch.randn(2).to(device)
+    y = torch.tensor([1, 2]).to(device)
 
-    out = model(x, t)
+    out = model(x, t, y)
     print(out.shape)
     # torch.Size([2, 16, 28, 28])
