@@ -54,3 +54,4 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 * 代码实现原理参考论文
     * Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow
     * Flow Matching for Generative Modeling
+    * Classifier-Free Diffusion Guidance
