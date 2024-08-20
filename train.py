@@ -39,6 +39,18 @@ def train(config):
     use_cfg = config.get('use_cfg', False)
     device = config.get('device', 'cuda')
 
+    # 打印训练参数
+    print('Training config:')
+    print(f'base_channels: {base_channels}')
+    print(f'epochs: {epochs}')
+    print(f'batch_size: {batch_size}')
+    print(f'lr_adjust_epoch: {lr_adjust_epoch}')
+    print(f'batch_print_interval: {batch_print_interval}')
+    print(f'checkpoint_save_interval: {checkpoint_save_interval}')
+    print(f'save_path: {save_path}')
+    print(f'use_cfg: {use_cfg}')
+    print(f'device: {device}')
+
     # 训练flow matching模型
 
     # 数据集加载

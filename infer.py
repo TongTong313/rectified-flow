@@ -33,7 +33,7 @@ def infer(
         assert y.shape[0] == num_imgs or y.shape[
             0] == 1, 'y.shape[0] must be equal to num_imgs or 1'
         if y.shape[0] == 1:
-            y = y.repeat(num_imgs, 1)
+            y = y.repeat(num_imgs, 1).reshape(num_imgs)
         y = y.to(device)
     # 生成一些图片
     # 加载模型
@@ -90,10 +90,10 @@ def infer(
 
 
 if __name__ == '__main__':
-    infer(checkpoint_path='./checkpoints/cfg/miniunet_0.pth',
+    infer(checkpoint_path='./checkpoints/cfg/miniunet_19.pth',
           base_channels=64,
           step=30,
           num_imgs=10,
-          y=torch.tensor([0]),
-          cfg_scale=0.0,
+          y=torch.tensor([8]),
+          cfg_scale=12.0,
           device='mps')
