@@ -10,11 +10,11 @@ from torch.optim.lr_scheduler import StepLR
 from rectified_flow import RectifiedFlow
 
 
-def train(config):
+def train(config: str):
     """训练flow matching模型
 
     Args:
-        config (dict): yaml配置文件，包含以下参数：
+        config (str): yaml配置文件路径，包含以下参数：
             base_channels (int, optional): MiniUnet的基础通道数，默认值为16。
             epochs (int, optional): 训练轮数，默认值为10。
             batch_size (int, optional): 批大小，默认值为128。
@@ -27,7 +27,7 @@ def train(config):
 
     """
     # 读取yaml配置文件
-    config = yaml.load(open(config, 'r'), Loader=yaml.FullLoader)
+    config = yaml.load(open(config, 'rb'), Loader=yaml.FullLoader)
     # 解析参数数据，有默认值
     base_channels = config.get('base_channels', 16)
     epochs = config.get('epochs', 10)
@@ -101,7 +101,7 @@ def train(config):
 
             optimizer.zero_grad()
 
-            # 这里我们要做一个数据的拼接，复制原始x_1但把一半的y替换成-1，表示无条件生成
+            # 这里我们要做一个数据的复制和拼接，复制原始x_1，把一半的y替换成-1表示无条件生成，这里也可以直接有条件、无条件累计两次计算两次loss的梯度
             if use_cfg:
                 x_t = torch.cat([x_t, x_t.clone()], dim=0)
                 t = torch.cat([t, t.clone()], dim=0)
@@ -129,6 +129,7 @@ def train(config):
         if epoch % checkpoint_save_interval == 0 or epoch == epochs - 1 or epoch == 0:
             # 第一轮也保存一下，快速测试用，大家可以删除
             # 保存模型
+            print(f'Saving model {epoch} to {save_path}...')
             save_dict = dict(model=model.state_dict(),
                              optimizer=optimizer.state_dict(),
                              epoch=epoch,

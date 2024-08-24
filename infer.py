@@ -67,6 +67,7 @@ def infer(
                 if y is not None:
                     y_i = y[i].unsqueeze(0)
                     # classifier-free guidance需要同时预测有条件和无条件的输出
+                    # 利用CFG的公式：x = x_uncond + cfg_scale * (x_cond - x_uncond)
                     v_pred_uncond = model(x=x_t, t=t)
                     v_pred_cond = model(x=x_t, t=t, y=y_i)
                     v_pred = v_pred_uncond + cfg_scale * (v_pred_cond -
@@ -95,5 +96,5 @@ if __name__ == '__main__':
           step=30,
           num_imgs=10,
           y=torch.tensor([8]),
-          cfg_scale=12.0,
-          device='mps')
+          cfg_scale=7.0,
+          device='cuda')
