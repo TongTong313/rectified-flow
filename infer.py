@@ -91,10 +91,17 @@ def infer(
 
 
 if __name__ == '__main__':
-    infer(checkpoint_path='./checkpoints/cfg/miniunet_19.pth',
+    # 每个条件生成10张图像
+    # label一个数字出现十次
+    y = []
+    for i in range(10):
+        y.extend([i] * 10)
+
+    infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
           base_channels=64,
           step=30,
-          num_imgs=10,
-          y=torch.tensor([8]),
+          num_imgs=100,
+          y=torch.tensor(y),
           cfg_scale=7.0,
+          save_path='./results/cfg',
           device='cuda')

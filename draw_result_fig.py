@@ -3,11 +3,13 @@ import cv2
 import os
 
 # 读取results文件夹的100张图片
-img_folder = 'results'
+img_folder = './results/cfg'
 img_files = [
     os.path.join(img_folder, f) for f in os.listdir(img_folder)
     if f.endswith('.png')
 ][:100]
+# 按照自然数顺序排列
+img_files.sort(key=lambda x: int(os.path.basename(x).split('.')[0]))
 
 fig, axes = plt.subplots(nrows=10, ncols=10, figsize=(10, 10))
 
