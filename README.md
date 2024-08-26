@@ -11,8 +11,8 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 **TODO**：
 - [x] 即将v1.0开放模型预训练权重（百度网盘形式）
 - [x] v1.1版本计划增加MNIST条件生成 
-- [ ] 即将开放v1.1版本相关模型权重文件（百度网盘形式）
-- [ ] v1.2版本计划增加MNIST文本条件
+- [x] 即将开放v1.1版本相关模型权重文件（百度网盘形式）
+- [ ] v1.2版本计划增加MNIST文本条件或者做reflow和distill
 
 **一些bug修复说明**:
 - 感谢B站粉丝大佬@EchozL提醒，MiniUnet编的草率了，现已更新，最高分辨率的特征也concat啦~
@@ -37,30 +37,25 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
   * 推理：`python infer.py`
   * 画loss曲线：`python plot_loss_curve.py`
   * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
+* 各版本权重代码和数据在此下载，把checkpoints和data文件夹放到根目录下即可：
+  * 链接：https://pan.baidu.com/s/1LiRvjo74Egrk89L5EGm9PA?pwd=ln3f 
+  * 提取码：ln3f 
+  * **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
 
 ## 版本说明
 ### V1.1: Flow Matching(Rectified Flow)条件生成
 * V1.1版本同时支持无条件生成和条件生成
 * V1.1版本相关模型权重文件即将更新到百度网盘（TODO）
-
 * 模型收敛较好
 ![loss curve](/fig/loss_curve_cfg.png)
-
 * 生成效果展示，每一行为一个类别的生成结果，从0-9
 ![results](/fig/results_fig_cfg.png)
 
 ### V1.0：Flow Matching(Rectified Flow)无条件生成
 * V1.0版本仅支持无条件生成
-* V1.0版本相关模型权重文件和MNIST数据集已上传至百度网盘，把checkpoints和data文件夹放到根目录下即可：
-    * 链接：https://pan.baidu.com/s/1WMaxvYKjDvad8Cr_vU5Exw?pwd=1nkv  
-    * 提取码：1nkv  
-    **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
 * 模型收敛较好
-
 ![loss curve](/fig/loss_curve.png)
-
 * 生成效果展示
-
 ![results](/fig/results_fig.png)
 
 ---
