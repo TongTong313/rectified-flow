@@ -22,7 +22,7 @@ def infer(
         step (int, optional): 采样步数（Euler方法的迭代次数），默认值为50。
         num_imgs (int, optional): 推理一次生成图片数量，默认值为5。
         y (torch.Tensor, optional): 条件生成中的条件，可以为数据标签（每一个标签是一个类别int型）或text文本（下一版本支持）,维度为[B]或[B, L]，其中B要么与num_imgs相等，要么为1（所有图像依照同一个条件生成）。
-        cfg_scale (float, optional): Classifier-free Guidance的缩放因子，默认值为7.0，y如果是None，无论这个值是几都是无条件生成。
+        cfg_scale (float, optional): Classifier-free Guidance的缩放因子，默认值为7.0，y如果是None，无论这个值是几都是无条件生成。这个值越大，多样性下降，但生成图像更符合条件要求。这个值越小，多样性增加，但生成图像可能不符合条件要求。
         save_path (str, optional): 保存路径，默认值为'./results'。
         device (str, optional): 推理设备，默认值为'cuda'。
     """
@@ -73,7 +73,7 @@ def infer(
                     v_pred = v_pred_uncond + cfg_scale * (v_pred_cond -
                                                           v_pred_uncond)
                 else:
-                    v_pred = model(x=x_t, t=t, y=None)
+                    v_pred = model(x=x_t, t=t)
 
                 # 使用Euler法计算下一个时间步长的值
                 x_t = rf.euler(x_t, v_pred, dt)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
           base_channels=64,
-          step=30,
+          step=20,
           num_imgs=100,
           y=torch.tensor(y),
           cfg_scale=7.0,

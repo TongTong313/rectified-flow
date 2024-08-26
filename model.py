@@ -6,6 +6,7 @@ import torch.nn as nn
 class DownLayer(nn.Module):
     """MiniUnet的下采样层 Resnet
     """
+
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -66,6 +67,7 @@ class DownLayer(nn.Module):
 class UpLayer(nn.Module):
     """MiniUnet的上采样层
     """
+
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -122,6 +124,7 @@ class UpLayer(nn.Module):
 class MiddleLayer(nn.Module):
     """MiniUnet的中间层
     """
+
     def __init__(self, in_channels, out_channels, time_emb_dim=16):
         super(MiddleLayer, self).__init__()
 
@@ -168,6 +171,7 @@ class MiniUnet(nn.Module):
     """采用MiniUnet，对MNIST数据做生成
         两个下采样block 一个中间block 两个上采样block
     """
+
     def __init__(self, base_channels=16, time_emb_dim=None):
         super(MiniUnet, self).__init__()
 
@@ -266,7 +270,7 @@ class MiniUnet(nn.Module):
         """对类别标签进行编码，同样采用正弦编码
 
         Args:
-            y (torch.Tensor): 图像标签，维度为[B]
+            y (torch.Tensor): 图像标签，维度为[B] label:0-9
             dim (int): 编码的维度
 
         Returns:

@@ -102,6 +102,7 @@ def train(config: str):
             optimizer.zero_grad()
 
             # 这里我们要做一个数据的复制和拼接，复制原始x_1，把一半的y替换成-1表示无条件生成，这里也可以直接有条件、无条件累计两次计算两次loss的梯度
+            # 一定的概率，把有条件生成换为无条件的 50%的概率 [x_t, x_t] [t, t]
             if use_cfg:
                 x_t = torch.cat([x_t, x_t.clone()], dim=0)
                 t = torch.cat([t, t.clone()], dim=0)
@@ -139,5 +140,4 @@ def train(config: str):
 
 
 if __name__ == '__main__':
-
     train(config='./config/train_config.yaml')
