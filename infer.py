@@ -58,6 +58,10 @@ def infer(
             # 初始的x_t就是x_0，标准高斯噪声
             x_t = torch.randn(1, 1, 28, 28).to(device)
 
+            # 提取第i个图像的标签条件y_i
+            if y is not None:
+                y_i = y[i].unsqueeze(0)
+
             for j in range(step):
                 if j % 10 == 0:
                     print(f'Generating {i}th image, step {j}...')
@@ -65,11 +69,11 @@ def infer(
                 t = torch.tensor([t]).to(device)
 
                 if y is not None:
-                    y_i = y[i].unsqueeze(0)
                     # classifier-free guidance需要同时预测有条件和无条件的输出
                     # 利用CFG的公式：x = x_uncond + cfg_scale * (x_cond - x_uncond)
+                    # 为什么用score推导的公式放到预测向量场v的情形可以直接用？
                     v_pred_uncond = model(x=x_t, t=t)
-                    v_pred_cond = model(x=x_t, t=t, y=y_i)
+                    v_pred_cond = model(x=x_t, t=t, ßy=y_i)
                     v_pred = v_pred_uncond + cfg_scale * (v_pred_cond -
                                                           v_pred_uncond)
                 else:
