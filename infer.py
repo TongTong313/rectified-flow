@@ -21,7 +21,7 @@ def infer(
         base_channels (int, optional): MiniUnet的基础通道数，默认值为16。
         step (int, optional): 采样步数（Euler方法的迭代次数），默认值为50。
         num_imgs (int, optional): 推理一次生成图片数量，默认值为5。
-        y (torch.Tensor, optional): 条件生成中的条件，可以为数据标签（每一个标签是一个类别int型）或text文本（下一版本支持）,维度为[B]或[B, L]，其中B要么与num_imgs相等，要么为1（所有图像依照同一个条件生成）。
+        y (torch.Tensor, optional): 条件生成中的条件，可以为数据标签（每一个标签是一个类别int型）或text文本（下一版本支持）,维度为[B]或[B, L]，其中B要么与num_imgs相等，要么为1（所有图像依照同一个条件生成）。 
         cfg_scale (float, optional): Classifier-free Guidance的缩放因子，默认值为7.0，y如果是None，无论这个值是几都是无条件生成。这个值越大，多样性下降，但生成图像更符合条件要求。这个值越小，多样性增加，但生成图像可能不符合条件要求。
         save_path (str, optional): 保存路径，默认值为'./results'。
         device (str, optional): 推理设备，默认值为'cuda'。
@@ -71,15 +71,15 @@ def infer(
                 if y is not None:
                     # classifier-free guidance需要同时预测有条件和无条件的输出
                     # 利用CFG的公式：x = x_uncond + cfg_scale * (x_cond - x_uncond)
-                    # 为什么用score推导的公式放到预测向量场v的情形可以直接用？
+                    # 为什么用score推导的公式放到预测向量场v的情形可以直接用？ SDE ODE
                     v_pred_uncond = model(x=x_t, t=t)
-                    v_pred_cond = model(x=x_t, t=t, ßy=y_i)
+                    v_pred_cond = model(x=x_t, t=t, y=y_i)
                     v_pred = v_pred_uncond + cfg_scale * (v_pred_cond -
                                                           v_pred_uncond)
                 else:
                     v_pred = model(x=x_t, t=t)
 
-                # 使用Euler法计算下一个时间步长的值
+                # 使用Euler法计算下一个时间的x_t
                 x_t = rf.euler(x_t, v_pred, dt)
 
             # 最后一步的x_t就是生成的图片
@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
           base_channels=64,
-          step=20,
+          step=10,
           num_imgs=100,
           y=torch.tensor(y),
           cfg_scale=7.0,
