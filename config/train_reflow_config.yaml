@@ -1,0 +1,15 @@
+base_channels: 64  # base_channels大一些有好处
+epochs: 20 # 训练多少个epoch
+batch_size: 16  # batch_size小一些
+lr: 0.00001  # 学习率
+lr_adjust_epoch: 10 # 学习率调整的epoch，降为原有的10%
+batch_print_interval: 100 # 打印间隔，以batch为单位
+checkpoint_save_interval: 10 # 模型保存间隔，以epoch为单位
+save_path: './checkpoints/v1.2-reflow-cfg'  # 模型保存路径
+use_cfg: True  # 是否使用classifier-free guidance，开启就可以训练条件生成模型了
+device: 'cuda' # cuda、cpu、mps(only macbook)
+ 
+# reflow新增参数
+img_root_path: './data/reflow_img'  # 图像的地址
+noise_root_path: './data/reflow_noise'  # 噪声的地址
+checkpoint_path: './checkpoints/v1.1-cfg/miniunet_49.pth'  # 模型的地址

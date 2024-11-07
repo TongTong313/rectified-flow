@@ -19,7 +19,8 @@ class RectifiedFlow:
         return x_t
 
     # 路线
-    def create_flow(self, x_1, t):
+    # v1.2: reflow增加x_0的输入
+    def create_flow(self, x_1, t, x_0=None):
         """ 使用x_t = t * x_1 + (1 - t) * x_0公式构建x_0到x_1的流
 
             X_1是原始图像 X_0是噪声图像（服从标准高斯分布）
@@ -27,6 +28,7 @@ class RectifiedFlow:
         Args:
             x_1: 原始图像，维度为 [B, C, H, W]
             t: 一个标量，表示时间，时间范围为 [0, 1]，维度为 [B]
+            x_0: 噪声图像，维度为 [B, C, H, W]，默认值为None
             
         Returns:
             x_t: 在时间t的图像，维度为 [B, C, H, W]
@@ -35,7 +37,8 @@ class RectifiedFlow:
         """
 
         # 需要一个x0，x0服从高斯噪声
-        x_0 = torch.randn_like(x_1)
+        if x_0 is None:
+            x_0 = torch.randn_like(x_1)
 
         t = t[:, None, None, None]  # [B, 1, 1, 1]
 

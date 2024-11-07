@@ -9,10 +9,11 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
 **特别推荐看一下本人的[扩散模型之老司机开车理论视频](https://www.bilibili.com/video/BV1qW42197dv/)，对你理解扩散模型有很大帮助~**
 
 **TODO**：
-- [x] 即将v1.0开放模型预训练权重（百度网盘形式）
+- [ ] 开放reflow（2-Rectified Flow）模型权重
+- [x] v1.2版本增加reflow
+- [x] 开放v1.1版本相关模型权重文件（百度网盘形式）
 - [x] v1.1版本计划增加MNIST条件生成 
-- [x] 即将开放v1.1版本相关模型权重文件（百度网盘形式）
-- [ ] v1.2版本计划增加MNIST文本条件或者做reflow和distill
+- [x] v1.0开放模型预训练权重（百度网盘形式）
 
 **一些bug修复说明**:
 - 感谢B站粉丝大佬@EchozL提醒，MiniUnet编的草率了，现已更新，最高分辨率的特征也concat啦~
@@ -32,8 +33,9 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
   * Matplotlib
   * 其他的就缺啥装啥
 * 代码运行方式
-  * 如果需要训练代码请务必先查看config文件夹里的train_config.yaml文件，并根据实际情况修改相关参数，尤其是是否使用classifier-free guidance，是否使用GPU等，设置好了再开始训练
-  * 训练：`python train.py`，注意设置相关参数
+  * 如果需要训练代码请务必先查看config文件夹里的配置文件，并根据实际情况修改相关参数，尤其是是否使用classifier-free guidance，是否使用GPU等，设置好了再开始训练
+  * 训练：`python train.py`，训练参数配置文件为`config/train_config.yaml`
+  * reflow训练：`python train_reflow.py`，训练参数配置文件为`config/train_reflow_config.yaml`
   * 推理：`python infer.py`
   * 画loss曲线：`python plot_loss_curve.py`
   * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
@@ -43,6 +45,18 @@ B站主页：[Tong发发](https://space.bilibili.com/323109608)
   * **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
 
 ## 版本说明
+### V1.2: Reflow
+* V1.2版本在V1.1版本的基础上进一步支持reflow训练
+* Reflow模型需要构建新的数据集，根据实验结果**所需数据量极大，算力成本较高，带来的提升确不够明显，对于MNIST这种简单数据集实用性不强**。6万张MNIST数据集需要**100万个**通过原生rectified flow模型（也即1-Rectified Flow模型）的样本对$(Z^{1}_{0}, Z^{1}_{1})$训练20个epoch，才有能看出来的效果
+* Reflow过程模型初始权重为1-Rectified Flow模型的权重
+* 模型收敛较好
+![loss curve](/fig/loss_curve_cfg_reflow.png)
+* 生成效果展示，每一行为一个类别的生成结果，从0-9，上图为2-Rectified Flow模型**2步**生成效果，下图为1-Rectified Flow模型的**2步**生成效果
+![results](/fig/results_fig_cfg_reflow_2steps.png)
+![results](/fig/results_fig_cfg_2steps.png)
+
+
+
 ### V1.1: Flow Matching(Rectified Flow)条件生成
 * V1.1版本同时支持无条件生成和条件生成
 * 模型收敛较好

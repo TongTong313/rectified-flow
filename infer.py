@@ -3,6 +3,7 @@ from model import MiniUnet
 from rectified_flow import RectifiedFlow
 import cv2
 import os
+import numpy as np
 
 
 def infer(
@@ -13,6 +14,7 @@ def infer(
         y=None,
         cfg_scale=7.0,
         save_path='./results',
+        save_noise_path=None,
         device='cuda'):
     """flow matching模型推理
 
@@ -24,9 +26,13 @@ def infer(
         y (torch.Tensor, optional): 条件生成中的条件，可以为数据标签（每一个标签是一个类别int型）或text文本（下一版本支持）,维度为[B]或[B, L]，其中B要么与num_imgs相等，要么为1（所有图像依照同一个条件生成）。 
         cfg_scale (float, optional): Classifier-free Guidance的缩放因子，默认值为7.0，y如果是None，无论这个值是几都是无条件生成。这个值越大，多样性下降，但生成图像更符合条件要求。这个值越小，多样性增加，但生成图像可能不符合条件要求。
         save_path (str, optional): 保存路径，默认值为'./results'。
+        save_noise_path (str, optional): 保存噪声路径，默认值为None。
         device (str, optional): 推理设备，默认值为'cuda'。
     """
     os.makedirs(save_path, exist_ok=True)
+    if save_noise_path is not None:
+        os.makedirs(save_noise_path, exist_ok=True)
+
     if y is not None:
         assert len(y.shape) == 1 or len(
             y.shape) == 2, 'y must be 1D or 2D tensor'
@@ -57,6 +63,7 @@ def infer(
 
             # 初始的x_t就是x_0，标准高斯噪声
             x_t = torch.randn(1, 1, 28, 28).to(device)
+            noise = x_t.detach().cpu().numpy()
 
             # 提取第i个图像的标签条件y_i
             if y is not None:
@@ -92,6 +99,9 @@ def infer(
             img = img[0] * 255
             img = img.astype('uint8')
             cv2.imwrite(os.path.join(save_path, f'{i}.png'), img)
+            if save_noise_path is not None:
+                # 保存为一个.npy格式的文件
+                np.save(os.path.join(save_noise_path, f'{i}.npy'), noise)
 
 
 if __name__ == '__main__':
@@ -100,12 +110,22 @@ if __name__ == '__main__':
     y = []
     for i in range(10):
         y.extend([i] * 10)
-
+    # v1.1
     infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
           base_channels=64,
-          step=10,
+          step=4,
           num_imgs=100,
           y=torch.tensor(y),
-          cfg_scale=7.0,
+          cfg_scale=5.0,
           save_path='./results/cfg',
+          device='cuda')
+
+    # v1.2
+    infer(checkpoint_path='./checkpoints/v1.2-reflow-cfg/miniunet_19.pth',
+          base_channels=64,
+          step=4,
+          num_imgs=100,
+          y=torch.tensor(y),
+          cfg_scale=5.0,
+          save_path='./results/reflow-cfg',
           device='cuda')

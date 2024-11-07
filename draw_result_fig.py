@@ -3,7 +3,8 @@ import cv2
 import os
 
 # 读取results文件夹的100张图片
-img_folder = './results/cfg'
+# img_folder = './results/reflow-cfg'  # v1.2
+img_folder = 'results/cfg'  # v1.1
 img_files = [
     os.path.join(img_folder, f) for f in os.listdir(img_folder)
     if f.endswith('.png')
