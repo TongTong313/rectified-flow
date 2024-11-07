@@ -2,7 +2,7 @@
 
 作者：Tong Tong 
 
-B站主页：[Tong发发](https://space.bilibili.com/323109608)
+B站主页：[Double童发发](https://space.bilibili.com/323109608)
 
 本套代码有相关讲解视频，详见B站：[从零手搓Flow Matching（Rectified Flow）](https://www.bilibili.com/video/BV1Sjv4ezEDN/)，同时强烈建议先看一下本人B站关于[Flow Matching](https://www.bilibili.com/video/BV1Wv3xeNEds/)和[Recitified Flow](https://www.bilibili.com/video/BV19m421G7W8/)的算法讲解视频，会对理解代码有很大帮助。
 
