@@ -9,7 +9,9 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
 **特别推荐看一下本人的[扩散模型之老司机开车理论视频](https://www.bilibili.com/video/BV1qW42197dv/)，对你理解扩散模型有很大帮助~**
 
 **TODO**：
-- [ ] 开放reflow（2-Rectified Flow）模型权重
+- [ ] v1.4版本计划增加文本条件输入（计划仅做简单实验，语言模型较大无法满足让大家都能上手的目标）
+- [ ] v1.3版本计划增加distillation
+- [x] 开放reflow（2-Rectified Flow）模型权重和数据
 - [x] v1.2版本增加reflow
 - [x] 开放v1.1版本相关模型权重文件（百度网盘形式）
 - [x] v1.1版本计划增加MNIST条件生成 
@@ -39,10 +41,7 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
   * 推理：`python infer.py`
   * 画loss曲线：`python plot_loss_curve.py`
   * 结果图像展示（100张生成图像拼图生成）：`python draw_result_fig.py`
-* 各版本权重代码和数据在此下载，把checkpoints和data文件夹放到根目录下即可：
-  * 链接：https://pan.baidu.com/s/1LiRvjo74Egrk89L5EGm9PA?pwd=ln3f 
-  * 提取码：ln3f 
-  * **注意！模型更新导致权重同步更新！请下载最新模型权重文件，更新日期2024年8月10日**
+  * 各版本权重代码和数据[点击下载](https://pan.baidu.com/s/1ZV1z9OSSXRYX5E5Ws8xvow?pwd=9hmi)，提取码9hmi，把checkpoints和data文件夹放到根目录下即可，**注意！代码或模型版本更新导致文件同步更新！请下载最新文件，更新日期2024年11月10日**
 
 ## 版本说明
 ### V1.2: Reflow
