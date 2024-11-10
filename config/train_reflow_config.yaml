@@ -12,4 +12,4 @@ device: 'cuda' # cuda、cpu、mps(only macbook)
 # reflow新增参数
 img_root_path: './data/reflow_img'  # 图像的地址
 noise_root_path: './data/reflow_noise'  # 噪声的地址
-checkpoint_path: './checkpoints/v1.1-cfg/miniunet_49.pth'  # 模型的地址
+checkpoint_path: './checkpoints/v1.1-cfg/miniunet_49.pth'  # 模型的地址 finetune

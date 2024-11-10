@@ -9,7 +9,7 @@ from torch.optim import Adam, AdamW
 from torch.optim.lr_scheduler import StepLR
 from rectified_flow import RectifiedFlow
 
-# 1. reflow的训练要从上一个reflow模型的权重作为预训练权重
+# 1. reflow的训练要从上一个1-rectified flow(v1.1)模型的权重作为预训练权重
 
 
 def train(config: str):
@@ -70,7 +70,6 @@ def train(config: str):
     # 训练flow matching模型
 
     # 数据集加载
-    # 把PIL转为tensor
     transform = Compose([ToTensor()])  # 变换成tensor + 变为[0, 1]
 
     print(f'Loading dataset from {img_root_path} and {noise_root_path}...')
@@ -85,7 +84,7 @@ def train(config: str):
     model = MiniUnet(base_channels)
     model.to(device)
 
-    # v1.2 reflow增加预训练权重加载
+    # v1.2 reflow增加预训练权重加载 1-RF
     print(f'Loading checkpoint from {checkpoint_path}...')
     model.load_state_dict(torch.load(checkpoint_path)['model'])
     print('Checkpoint loaded.')

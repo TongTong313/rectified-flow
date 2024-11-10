@@ -110,20 +110,20 @@ if __name__ == '__main__':
     y = []
     for i in range(10):
         y.extend([i] * 10)
-    # v1.1
+    # v1.1 1-RF
     infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
           base_channels=64,
-          step=4,
+          step=2,
           num_imgs=100,
           y=torch.tensor(y),
           cfg_scale=5.0,
           save_path='./results/cfg',
           device='cuda')
 
-    # v1.2
+    # v1.2 2-RF
     infer(checkpoint_path='./checkpoints/v1.2-reflow-cfg/miniunet_19.pth',
           base_channels=64,
-          step=4,
+          step=2,
           num_imgs=100,
           y=torch.tensor(y),
           cfg_scale=5.0,
