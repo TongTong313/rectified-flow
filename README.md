@@ -17,7 +17,6 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
 - [x] v1.1版本计划增加MNIST条件生成 
 - [x] v1.0开放模型预训练权重（百度网盘形式）
 
-**
 
 **一些bug修复说明**:
 - 感谢B站粉丝大佬@EchozL提醒，MiniUnet编的草率了，现已更新，最高分辨率的特征也concat啦~
