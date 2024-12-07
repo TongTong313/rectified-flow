@@ -55,6 +55,7 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
   
 ![loss curve](/fig/loss_curve_cfg_reflow.png)
 * 生成效果展示，每一行为一个类别的生成结果，从0-9，上图为2-Rectified Flow模型**2步**生成效果，下图为1-Rectified Flow模型的**2步**生成效果
+
 ![results](/fig/results_fig_cfg_reflow_2steps.png)
 ![results](/fig/results_fig_cfg_2steps.png)
 
@@ -63,15 +64,19 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
 ### V1.1: Flow Matching(Rectified Flow)条件生成
 * V1.1版本同时支持无条件生成和条件生成
 * 模型收敛较好
+
 ![loss curve](/fig/loss_curve_cfg.png)
 * 生成效果展示，每一行为一个类别的生成结果，从0-9
+
 ![results](/fig/results_fig_cfg.png)
 
 ### V1.0：Flow Matching(Rectified Flow)无条件生成
 * V1.0版本仅支持无条件生成
 * 模型收敛较好
+
 ![loss curve](/fig/loss_curve.png)
 * 生成效果展示
+
 ![results](/fig/results_fig.png)
 
 ---
