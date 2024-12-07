@@ -52,6 +52,7 @@ B站主页：[Double童发发](https://space.bilibili.com/323109608)
 * Reflow模型需要构建新的数据集，根据实验结果**所需数据量极大，算力成本较高，带来的提升确不够明显，对于MNIST这种简单数据集实用性不强**。6万张MNIST数据集需要**100万个**通过原生rectified flow模型（也即1-Rectified Flow模型）的样本对$`(Z_{0}^{1}, Z_{1}^{1})`$训练20个epoch，才有能看出来的效果
 * Reflow过程模型初始权重为1-Rectified Flow模型的权重
 * 模型收敛较好
+  
 ![loss curve](/fig/loss_curve_cfg_reflow.png)
 * 生成效果展示，每一行为一个类别的生成结果，从0-9，上图为2-Rectified Flow模型**2步**生成效果，下图为1-Rectified Flow模型的**2步**生成效果
 ![results](/fig/results_fig_cfg_reflow_2steps.png)
