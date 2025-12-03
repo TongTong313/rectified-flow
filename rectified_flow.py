@@ -44,7 +44,7 @@ class RectifiedFlow:
 
         # 获得xt的值
         x_t = t * x_1 + (1 - t) * x_0
-
+        print(x_t.shape, x_0.shape)
         return x_t, x_0
 
     # 司机

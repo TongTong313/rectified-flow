@@ -13,7 +13,7 @@ if __name__ == '__main__':
         save_noise_path = f'./data/reflow_noise/{i}'
         y = [i] * 100000
 
-        infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_49.pth',
+        infer(checkpoint_path='./checkpoints/v1.1-cfg/miniunet_0.pth',
               base_channels=64,
               step=20,
               num_imgs=100000,
