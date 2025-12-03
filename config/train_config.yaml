@@ -1,6 +1,6 @@
 base_channels: 64  # base_channels大一些有好处
 epochs: 50 # 训练多少个epoch
-batch_size: 16  # batch_size小一些
+batch_size: 16  # batch_size小一些16
 lr_adjust_epoch: 25 # 学习率调整的epoch，降为原有的10%
 batch_print_interval: 100 # 打印间隔，以batch为单位
 checkpoint_save_interval: 10 # 模型保存间隔，以epoch为单位

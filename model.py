@@ -13,7 +13,7 @@ class DownLayer(nn.Module):
                  time_emb_dim=16,
                  downsample=False):
         super(DownLayer, self).__init__()
-
+        # 两个卷积层
         self.conv1 = nn.Conv2d(in_channels,
                                out_channels,
                                kernel_size=3,
@@ -22,6 +22,7 @@ class DownLayer(nn.Module):
                                out_channels,
                                kernel_size=3,
                                padding=1)
+        # 归一化层
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.bn2 = nn.BatchNorm2d(out_channels)
 
@@ -45,22 +46,22 @@ class DownLayer(nn.Module):
     def forward(self, x, temb):
         # x: [B, C, H, W]
         res = x
-        x += self.fc(temb)[:, :, None, None]  # [B, in_channels, 1, 1]
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.act(x)
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.act(x)
+        x += self.fc(temb)[:, :, None, None]  # [B, in_channels, H, W]
+        x = self.conv1(x) # [B, out_channels, H, W]
+        x = self.bn1(x) # [B, out_channels, H, W]
+        x = self.act(x) # [B, out_channels, H, W]
+        x = self.conv2(x) # [B, out_channels, H, W]
+        x = self.bn2(x) # [B, out_channels, H, W]
+        x = self.act(x) # [B, out_channels, H, W]
 
         if self.shortcut is not None:
             res = self.shortcut(res)
 
         x = x + res
-
+        # [B, out_channels, H, W]
         if self.downsample:
             x = self.pool(x)
-
+        # [B, out_channels, H/2, W/2]
         return x
 
 
@@ -258,13 +259,14 @@ class MiniUnet(nn.Module):
         """
         # 生成正弦编码
         # 把t映射到[0, 1000]
-        t = t * 1000
+        t = t * 1000# [B]
         # 10000^k k=torch.linspace……
-        freqs = torch.pow(10000, torch.linspace(0, 1, dim // 2)).to(t.device)
-        sin_emb = torch.sin(t[:, None] / freqs)
-        cos_emb = torch.cos(t[:, None] / freqs)
-
-        return torch.cat([sin_emb, cos_emb], dim=-1)
+        freqs = torch.pow(10000, torch.linspace(0, 1, dim // 2)).to(t.device) # [dim/2]
+        # sin_emb = sin(t*1000/10000^(0, 1, 2, …… dim/2-1))
+        sin_emb = torch.sin(t[:, None] / freqs) # [B, dim/2]
+        cos_emb = torch.cos(t[:, None] / freqs) # [B, dim/2]
+        # 位置编码包括正弦和余弦部分
+        return torch.cat([sin_emb, cos_emb], dim=-1) # [B, dim]
 
     def label_emb(self, y, dim):
         """对类别标签进行编码，同样采用正弦编码
@@ -294,9 +296,9 @@ class MiniUnet(nn.Module):
         """
         # x:(B, C, H, W)
         # 时间编码加上
-        x = self.conv_in(x)
+        x = self.conv_in(x)# [B, base_channels, H, W]
         # 时间编码
-        temb = self.time_emb(t, self.base_channels)
+        temb = self.time_emb(t, self.base_channels) # [B, base_channels]
         # 这里注意，我们把temb和labelemb加起来，作为一个整体的temb输入到MiniUnet中，让模型进行感知！二者编码维度一样，可以直接相加！就把label的条件信息融入进去了！
         if y is not None:
             # 判断y是label还是token
@@ -308,21 +310,33 @@ class MiniUnet(nn.Module):
                 yemb[y == -1] = 0.0
                 temb += yemb
             else:  # 文字版本
-                pass
+                # 假设y是一个文本序列，使用简单的嵌入方式
+                # 这里可以使用nn.Embedding或者其他文本编码方式
+                embedding_dim = self.base_channels
+                text_embedding = nn.Embedding(1000, embedding_dim).to(y.device)  # 假设词表大小为1000
+                yemb = text_embedding(y.long())  # [B, L, embedding_dim]
+                yemb = yemb.mean(dim=1)  # 对序列维度取平均，得到[B, embedding_dim]
+                temb += yemb
         # 下采样
+        # [B, base_channels, H, W]
         for layer in self.down1:
             x = layer(x, temb)
+        # [B, base_channels*2, H, W]
         x1 = x
         x = self.maxpool1(x)
+        # [B, base_channels*2, H/2, W/2]
         for layer in self.down2:
             x = layer(x, temb)
+        # [B, base_channels*4, H/2, W/2]
         x2 = x
         x = self.maxpool2(x)
-
+        # print(x.shape)
+        # [B, base_channels*4, H/4, W/4]
         # 中间层
         x = self.middle(x, temb)
-
+        # [B, base_channels*4, H/4, W/4]
         # 上采样
+        # print(x.shape)
         x = torch.cat([self.upsample1(x), x2], dim=1)
         for layer in self.up1:
             x = layer(x, temb)
@@ -331,11 +345,12 @@ class MiniUnet(nn.Module):
             x = layer(x, temb)
 
         x = self.conv_out(x)
+        # print(x.shape)
         return x
 
 
 if __name__ == '__main__':
-    device = 'mps'
+    device = 'cuda'
     model = MiniUnet()
     model = model.to(device)
     x = torch.randn(2, 1, 28, 28).to(device)
@@ -343,5 +358,6 @@ if __name__ == '__main__':
     y = torch.tensor([1, 2]).to(device)
 
     out = model(x, t, y)
-    print(out.shape)
+    # print(out.shape)
+
     # torch.Size([2, 16, 28, 28])

@@ -122,6 +122,8 @@ def train(config: str):
 
             if batch % batch_print_interval == 0:
                 print(f'[Epoch {epoch}] [batch {batch}] loss: {loss.item()}')
+                # for d in range(torch.cuda.device_count()):
+                #     print('GPU: ', torch.cuda.get_device_name(d))
 
             loss_list.append(loss.item())
 
