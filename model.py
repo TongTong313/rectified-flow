@@ -161,7 +161,7 @@ class MiddleLayer(nn.Module):
         x = self.act(x)
 
         if self.shortcut is not None:
-            x = self.shortcut(x)
+            res = self.shortcut(res)
         x = x + res
 
         return x
